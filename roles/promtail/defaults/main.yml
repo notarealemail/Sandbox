@@ -72,6 +72,7 @@ promtail_docker_image: "grafana/promtail:{{ promtail_docker_image_tag }}"
 # Ports
 promtail_docker_ports_defaults:
   - "1514:1514"
+  - "9080:9080"
 promtail_docker_ports_custom: []
 promtail_docker_ports: "{{ promtail_docker_ports_defaults + promtail_docker_ports_custom }}"
 
@@ -90,7 +91,8 @@ promtail_docker_commands: "{{ promtail_docker_commands_default + promtail_docker
 # Volumes
 promtail_docker_volumes_default:
   - "{{ promtail_paths_location }}:/etc/promtail"
-  - "/var/log:/var/log"
+  - "/var/log:/var/log:ro"
+  - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
 promtail_docker_volumes_custom: []
 promtail_docker_volumes: "{{ promtail_docker_volumes_default + promtail_docker_volumes_custom }}"
 
@@ -120,7 +122,8 @@ promtail_docker_networks: "{{ docker_networks_common + promtail_docker_networks_
 
 # Capabilities
 promtail_docker_capabilities_default: []
-promtail_docker_capabilities_custom: []
+promtail_docker_capabilities_custom:
+  - "CAP_DAC_READ_SEARCH"
 promtail_docker_capabilities: "{{ promtail_docker_capabilities_default + promtail_docker_capabilities_custom }}"
 
 # Security Opts
