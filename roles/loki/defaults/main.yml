@@ -91,8 +91,6 @@ loki_docker_ports: "{{ loki_docker_ports_defaults + loki_docker_ports_custom }}"
 
 # Envs
 loki_docker_envs_default:
-  PUID: "{{ uid }}"
-  PGID: "{{ gid }}"
   TZ: "{{ tz }}"
 loki_docker_envs_custom: {}
 loki_docker_envs: "{{ loki_docker_envs_default | combine(loki_docker_envs_custom) }}"
@@ -149,3 +147,6 @@ loki_docker_restart_policy: unless-stopped
 
 # State
 loki_docker_state: started
+
+# User
+loki_docker_user: "{{ uid }}:{{ gid }}"
