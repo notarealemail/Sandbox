@@ -125,7 +125,8 @@ promtail_docker_networks: "{{ docker_networks_common + promtail_docker_networks_
 # Capabilities
 promtail_docker_capabilities_default: []
 promtail_docker_capabilities_custom:
-  - "CAP_DAC_READ_SEARCH"
+  - "DAC_READ_SEARCH"
+  - "DAC_OVERRIDE"
 promtail_docker_capabilities: "{{ promtail_docker_capabilities_default + promtail_docker_capabilities_custom }}"
 
 # Security Opts
