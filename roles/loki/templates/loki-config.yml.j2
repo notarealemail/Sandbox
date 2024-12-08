@@ -35,4 +35,10 @@ ruler:
   alertmanager_url: "{{ loki_ruler_alertmanager_url }}"
 
 limits_config:
-  allow_structured_metadata: false
+  allow_structured_metadata: true
+  ingestion_rate_mb: 32        # Increase from default (e.g., 4 MB/s to 8 MB/s)
+  ingestion_burst_size_mb: 64 # Typically set to 2x the ingestion_rate_mb
+  max_streams_per_user: 5000  # Increase from default (e.g., 1000 to 5000)
+#  max_entries_per_second: 50000  # Increase from default (e.g., 5000 to 50000)
+  max_line_size: 204800  # Increase from default (e.g., 131072 bytes to 200 KB)
+
