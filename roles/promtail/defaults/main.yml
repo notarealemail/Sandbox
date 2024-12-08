@@ -93,7 +93,7 @@ promtail_docker_commands: "{{ promtail_docker_commands_default + promtail_docker
 # Volumes
 promtail_docker_volumes_default:
   - "{{ promtail_paths_location }}:/etc/promtail"
-  - "/var/log:/var/log:ro,z"
+#  - "/var/log:/var/log:ro,z"
   - "/var/lib/docker/containers:/var/lib/docker/containers:ro,z"
 promtail_docker_volumes_custom: []
 promtail_docker_volumes: "{{ promtail_docker_volumes_default + promtail_docker_volumes_custom }}"
@@ -141,4 +141,5 @@ promtail_docker_restart_policy: unless-stopped
 promtail_docker_state: started
 
 # User
-promtail_docker_user: "{{ uid }}:{{ gid }}"
+#promtail_docker_user: "{{ uid }}:{{ gid }}"
+promtail_docker_user: "0:0"
