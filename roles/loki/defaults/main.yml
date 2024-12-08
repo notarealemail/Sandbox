@@ -1,0 +1,150 @@
+#########################################################################
+# Title:            Sandbox: Loki                                       #
+# Author(s):        notarealemail                                       #
+# URL:              https://github.com/saltyorg/Sandbox                 #
+# --                                                                    #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Basics
+################################
+
+loki_name: loki
+
+################################
+# Settings
+################################
+
+loki_ring_instance_addr: "127.0.0.1"
+loki_schema_from: "2020-10-24"
+#loki_schema_store: "boltdb-shipper"
+loki_schema_store: "tsdb"
+loki_schema_object_store: "filesystem"
+loki_schema_version: "v13"
+loki_schema_index_prefix: "index_"
+loki_schema_index_period: "24h"
+loki_ruler_alertmanager_url: "http://localhost:9093"
+loki_overwrite_config: true
+
+################################
+# Paths
+################################
+
+loki_paths_folder: "{{ loki_name }}"
+loki_paths_location: "{{ server_appdata_path }}/{{ loki_paths_folder }}"
+loki_paths_folders_list:
+  - "{{ loki_paths_location }}/config"
+  - "{{ loki_paths_location }}/data"
+  
+################################
+# Web
+################################
+
+loki_web_subdomain: "{{ loki_name }}"
+loki_web_domain: "{{ user.domain }}"
+loki_web_port: "3100"
+loki_web_url: "{{ 'https://' + (loki_web_subdomain + '.' + loki_web_domain
+                  if (loki_web_subdomain | length > 0)
+                  else loki_web_domain) }}"
+loki_grpc_listen_port: "9096"
+
+################################
+# DNS
+################################
+
+loki_dns_record: "{{ loki_web_subdomain }}"
+loki_dns_zone: "{{ loki_web_domain }}"
+loki_dns_proxy: "{{ dns.proxied }}"
+
+################################
+# Traefik
+################################
+
+loki_traefik_sso_middleware: "{{ traefik_default_sso_middleware }}"
+loki_traefik_middleware_default: "{{ traefik_default_middleware }}"
+loki_traefik_middleware_custom: ""
+loki_traefik_certresolver: "{{ traefik_default_certresolver }}"
+loki_traefik_enabled: true
+
+################################
+# Docker
+################################
+
+# Container
+loki_docker_container: "{{ loki_name }}"
+
+# Image
+loki_docker_image_pull: true
+loki_docker_image_tag: "latest"
+loki_docker_image: "grafana/loki:{{ loki_docker_image_tag }}"
+
+# Ports
+loki_docker_ports_defaults:
+  - "3100:3100"
+#  - "7946"
+#  - "9095"
+loki_docker_ports_custom: []
+loki_docker_ports: "{{ loki_docker_ports_defaults + loki_docker_ports_custom }}"
+
+# Envs
+loki_docker_envs_default:
+  PUID: "{{ uid }}"
+  PGID: "{{ gid }}"
+  TZ: "{{ tz }}"
+loki_docker_envs_custom: {}
+loki_docker_envs: "{{ loki_docker_envs_default | combine(loki_docker_envs_custom) }}"
+
+# Commands
+loki_docker_commands_default: []
+loki_docker_commands_custom:
+  - "-config.file=/etc/loki/config/loki-config.yml"
+loki_docker_commands: "{{ loki_docker_commands_default + loki_docker_commands_custom }}"
+
+# Volumes
+loki_docker_volumes_default:
+  - "{{ loki_paths_location }}:/etc/loki"
+#  - "{{ loki_paths_location }}/data:/loki"
+loki_docker_volumes_custom: []
+loki_docker_volumes: "{{ loki_docker_volumes_default + loki_docker_volumes_custom }}"
+
+# Devices
+loki_docker_devices_default: []
+loki_docker_devices_custom: []
+loki_docker_devices: "{{ loki_docker_devices_default + loki_docker_devices_custom }}"
+
+# Hosts
+loki_docker_hosts_default: {}
+loki_docker_hosts_custom: {}
+loki_docker_hosts: "{{ docker_hosts_common | combine(loki_docker_hosts_default) | combine(loki_docker_hosts_custom) }}"
+
+# Labels
+loki_docker_labels_default: {}
+loki_docker_labels_custom: {}
+loki_docker_labels: "{{ docker_labels_common | combine(loki_docker_labels_default) | combine(loki_docker_labels_custom) }}"
+
+# Hostname
+loki_docker_hostname: "{{ loki_name }}"
+
+# Networks
+loki_docker_networks_alias: "{{ loki_name }}"
+loki_docker_networks_default: []
+loki_docker_networks_custom: []
+loki_docker_networks: "{{ docker_networks_common + loki_docker_networks_default + loki_docker_networks_custom }}"
+
+# Capabilities
+loki_docker_capabilities_default: []
+loki_docker_capabilities_custom: []
+loki_docker_capabilities: "{{ loki_docker_capabilities_default + loki_docker_capabilities_custom }}"
+
+# Security Opts
+loki_docker_security_opts_default: []
+loki_docker_security_opts_custom: []
+loki_docker_security_opts: "{{ loki_docker_security_opts_default + loki_docker_security_opts_custom }}"
+
+# Restart Policy
+loki_docker_restart_policy: unless-stopped
+
+# State
+loki_docker_state: started

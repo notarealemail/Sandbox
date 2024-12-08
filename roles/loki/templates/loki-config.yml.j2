@@ -1,0 +1,38 @@
+auth_enabled: false
+
+server:
+  http_listen_port: {{ loki_web_port }}
+  grpc_listen_port: {{ loki_grpc_listen_port }}
+
+common:
+  path_prefix: "/tmp/loki"
+  storage:
+    filesystem:
+      chunks_directory: "/tmp/loki/chunks"
+      rules_directory: "/tmp/loki/rules}"
+  replication_factor: 1
+  ring:
+    instance_addr: "{{ loki_ring_instance_addr }}"
+    kvstore:
+      store: inmemory
+
+schema_config:
+  configs:
+    - from: "{{ loki_schema_from }}"
+      store: "{{ loki_schema_store }}"
+      object_store: "{{ loki_schema_object_store }}"
+      schema: "{{ loki_schema_version }}"
+      index:
+        prefix: "{{ loki_schema_index_prefix }}"
+        period: "{{ loki_schema_index_period }}"
+
+ruler:
+  storage:
+    type: local
+    local:
+      # Change this to a directory with appropriate permissions
+      directory: /etc/loki/data/loki/rules
+  alertmanager_url: "{{ loki_ruler_alertmanager_url }}"
+
+limits_config:
+  allow_structured_metadata: false
