@@ -16,6 +16,7 @@ promtail_name: promtail
 ################################
 # Settings
 ################################
+promtail_overwrite_config: true
 
 ################################
 # Paths
