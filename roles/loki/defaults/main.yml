@@ -19,7 +19,7 @@ loki_name: loki
 
 loki_ring_instance_addr: "127.0.0.1"
 loki_schema_from: "2020-10-24"
-#loki_schema_store: "boltdb-shipper"
+# loki_schema_store: "boltdb-shipper"
 loki_schema_store: "tsdb"
 loki_schema_object_store: "filesystem"
 loki_schema_version: "v13"
@@ -38,7 +38,7 @@ loki_paths_folders_list:
   - "{{ loki_paths_location }}"
   - "{{ loki_paths_location }}/config"
   - "{{ loki_paths_location }}/data"
-  
+
 ################################
 # Web
 ################################
@@ -91,8 +91,6 @@ loki_docker_ports: "{{ loki_docker_ports_defaults + loki_docker_ports_custom }}"
 
 # Envs
 loki_docker_envs_default:
-#  PUID: "{{ uid }}"
-#  PGID: "{{ gid }}"
   TZ: "{{ tz }}"
 loki_docker_envs_custom: {}
 loki_docker_envs: "{{ loki_docker_envs_default | combine(loki_docker_envs_custom) }}"
@@ -149,3 +147,6 @@ loki_docker_restart_policy: unless-stopped
 
 # State
 loki_docker_state: started
+
+# User
+loki_docker_user: "{{ uid }}:{{ gid }}"

@@ -27,11 +27,12 @@ schema_config:
         period: "{{ loki_schema_index_period }}"
 
 ruler:
+  enabled: true
   storage:
     type: local
     local:
       # Change this to a directory with appropriate permissions
-      directory: /etc/loki/data/loki/rules
+      directory: /etc/loki/data/rules
   alertmanager_url: "{{ loki_ruler_alertmanager_url }}"
 
 limits_config:
