@@ -93,7 +93,7 @@ promtail_docker_commands: "{{ promtail_docker_commands_default + promtail_docker
 # Volumes
 promtail_docker_volumes_default:
   - "{{ promtail_paths_location }}:/etc/promtail"
-  - "/var/log:/var/log:ro"
+#  - "/var/log:/var/log:ro"
   - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
 promtail_docker_volumes_custom: []
 promtail_docker_volumes: "{{ promtail_docker_volumes_default + promtail_docker_volumes_custom }}"
