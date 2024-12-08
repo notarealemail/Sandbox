@@ -1,5 +1,5 @@
 #########################################################################
-# Title:            Sandbox: Promtail                                   #
+# Title:            Sandbox: promtail                                   #
 # Author(s):        notarealemail                                       #
 # URL:              https://github.com/saltyorg/Sandbox                 #
 # --                                                                    #
@@ -14,6 +14,10 @@
 promtail_name: promtail
 
 ################################
+# Settings
+################################
+
+################################
 # Paths
 ################################
 
@@ -21,7 +25,7 @@ promtail_paths_folder: "{{ promtail_name }}"
 promtail_paths_location: "{{ server_appdata_path }}/{{ promtail_paths_folder }}"
 promtail_paths_folders_list:
   - "{{ promtail_paths_location }}"
-promtail_paths_config_location: "{{ promtail_paths_location }}/config/config.yml"
+  - "{{ promtail_paths_location }}/config"
 
 ################################
 # Web
@@ -29,10 +33,10 @@ promtail_paths_config_location: "{{ promtail_paths_location }}/config/config.yml
 
 promtail_web_subdomain: "{{ promtail_name }}"
 promtail_web_domain: "{{ user.domain }}"
-promtail_web_port: "9080"
+# promtail_web_port: "3100"
 promtail_web_url: "{{ 'https://' + (promtail_web_subdomain + '.' + promtail_web_domain
-                    if (promtail_web_subdomain | length > 0)
-                    else promtail_web_domain) }}"
+                  if (promtail_web_subdomain | length > 0)
+                  else promtail_web_domain) }}"
 
 ################################
 # DNS
@@ -66,28 +70,26 @@ promtail_docker_image: "grafana/promtail:{{ promtail_docker_image_tag }}"
 
 # Ports
 promtail_docker_ports_defaults:
-  - "9080:9080"  # Promtail HTTP server
-  - "1514:1514"  # For syslog if needed
+  - "1514:1514"
 promtail_docker_ports_custom: []
 promtail_docker_ports: "{{ promtail_docker_ports_defaults + promtail_docker_ports_custom }}"
 
 # Envs
 promtail_docker_envs_default:
-  PUID: "{{ uid }}"
-  PGID: "{{ gid }}"
   TZ: "{{ tz }}"
 promtail_docker_envs_custom: {}
 promtail_docker_envs: "{{ promtail_docker_envs_default | combine(promtail_docker_envs_custom) }}"
 
 # Commands
 promtail_docker_commands_default: []
-promtail_docker_commands_custom: []
+promtail_docker_commands_custom:
+  - "-config.file=/etc/promtail/config/promtail-config.yml"
 promtail_docker_commands: "{{ promtail_docker_commands_default + promtail_docker_commands_custom }}"
 
 # Volumes
 promtail_docker_volumes_default:
-  - "{{ promtail_paths_location }}/config:/etc/promtail"
-  - "/var/log:/var/log"  # Access to host logs
+  - "{{ promtail_paths_location }}:/etc/promtail"
+  - "/var/log:/var/log"
 promtail_docker_volumes_custom: []
 promtail_docker_volumes: "{{ promtail_docker_volumes_default + promtail_docker_volumes_custom }}"
 
@@ -130,3 +132,6 @@ promtail_docker_restart_policy: unless-stopped
 
 # State
 promtail_docker_state: started
+
+# User
+promtail_docker_user: "{{ uid }}:{{ gid }}"

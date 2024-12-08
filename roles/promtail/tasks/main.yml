@@ -1,5 +1,5 @@
 #########################################################################
-# Title:            Sandbox: Promtail                                   #
+# Title:            Sandbox: promtail                                   #
 # Author(s):        notarealemail                                       #
 # URL:              https://github.com/saltyorg/Sandbox                 #
 # --                                                                    #
@@ -13,25 +13,24 @@
     dns_record: "{{ lookup('vars', role_name + '_dns_record') }}"
     dns_zone: "{{ lookup('vars', role_name + '_dns_zone') }}"
     dns_proxy: "{{ lookup('vars', role_name + '_dns_proxy') }}"
-    
+
 - name: Remove existing Docker container
   ansible.builtin.include_tasks: "{{ resources_tasks_path }}/docker/remove_docker_container.yml"
 
 - name: Create directories
   ansible.builtin.include_tasks: "{{ resources_tasks_path }}/directories/create_directories.yml"
 
-- name: Check if '{{ promtail_paths_location }}' exists
-  ansible.builtin.stat:
-    path: "{{ promtail_paths_location }}"
-  register: promtail_config
-
-- name: Deploy Promtail configuration file
+- name: "Settings | Import promtail-config.yml"
   ansible.builtin.template:
-    src: "config.yml.j2"
-    dest: "{{ promtail_paths_location }}/config/config.yml"
+    src: "{{ item }}.j2"
+    dest: '{{ promtail_paths_location }}/config/{{ item }}'
     owner: "{{ user.name }}"
     group: "{{ user.name }}"
-    mode: '0644'
+    mode: "0664"
+    force: yes
+  loop:
+    - "promtail-config.yml"
+  when: promtail_overwrite_config
 
 - name: Create Docker container
   ansible.builtin.include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"
